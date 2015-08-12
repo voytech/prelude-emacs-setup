@@ -37,6 +37,11 @@
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives
+             '("melpa-2" . "http://melpa.org/packages/") t)
+
 ;; set package-user-dir to be relative to Prelude install path
 (setq package-user-dir (expand-file-name "elpa" prelude-dir))
 (package-initialize)
@@ -129,6 +134,9 @@ PACKAGE is installed only if not already present.  The file is opened in MODE."
 
 (defvar prelude-auto-install-alist
   '(("\\.clj\\'" clojure-mode clojure-mode)
+    ("\\.boot\\'" clojure-mode clojure-mode)
+    ("\\.cljs.hl\\'" clojure-mode clojure-mode)
+    ("\\.cljs\\'" clojure-mode clojure-mode)
     ("\\.coffee\\'" coffee-mode coffee-mode)
     ("\\.css\\'" css-mode css-mode)
     ("\\.csv\\'" csv-mode csv-mode)

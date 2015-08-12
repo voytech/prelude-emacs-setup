@@ -30,7 +30,7 @@
 ;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
-;;; Code:
+;;;   Code:
 
 (require 'prelude-programming)
 
@@ -63,7 +63,6 @@
        (subword-mode +1))
 
      (setq prelude-coffee-mode-hook 'prelude-coffee-mode-defaults)
-
      (add-hook 'coffee-mode-hook (lambda ()
                                    (run-hooks 'prelude-coffee-mode-hook)))))
 (provide 'prelude-coffee)

@@ -1,4 +1,4 @@
-;;; init.el --- Prelude's configuration entry point.
+;; init.el --- Prelude's configuration entry point.
 ;;
 ;; Copyright (c) 2011 Bozhidar Batsov
 ;;
@@ -105,7 +105,6 @@ by Prelude.")
 (require 'prelude-mode)
 (require 'prelude-editor)
 (require 'prelude-global-keybindings)
-
 ;; OSX specific settings
 (when (eq system-type 'darwin)
   (require 'prelude-osx))
@@ -124,8 +123,31 @@ by Prelude.")
   (message "Loading personal configuration files in %s..." prelude-personal-dir)
   (mapc 'load (directory-files prelude-personal-dir 't "^[^#].*el$")))
 
-(message "Prelude is ready to do thy bidding, Master %s!" current-user)
+;;setup proxy.
+  (setq url-proxy-services
+   '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+    ;; ("http" . "proxy.outbox:3128")
+    ;; ("https" . "proxy.outbox:3128")
+  ))
 
+;;THIS IS RATHER DIRTY WAY OF BINDING KEYS BUT
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(global-set-key (kbd "C-S-c <down>") 'enlarge-window)
+(global-set-key (kbd "C-S-c <up>") 'shrink-window)
+(global-set-key (kbd "C-S-c <left>") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-S-c <right>") 'shrink-window-horizontally)
+
+(setq projectile-tags-command "ctags-exuberant -Re -f %s %s")
+;;(message "initializing auto-complete-config")
+;;(add-to-list 'load-path "c:/Users/Outbox/.emacs.d")
+;;(require 'auto-complete-config)
+;;(add-to-list 'ac-dictionary-directories "c:/Users/Outbox/.emacs.d/ac-dict")
+;;(ac-config-default)
+;;(message "auto-complete-config initialized...")
+(message "Prelude is ready to do thy bidding, Master %s!" current-user)
 (prelude-eval-after-init
  ;; greet the use with some useful tip
  (run-at-time 5 nil 'prelude-tip-of-the-day))

@@ -32,15 +32,32 @@
 
 ;;; Code:
 
+
+(add-to-list 'load-path "~/.emacs.d")
 (require 'prelude-lisp)
-(prelude-require-packages '(clojure-mode cider))
+(require 'auto-complete-config)
+(require 'flycheck)
+(prelude-require-packages '(clojure-mode cider ac-cider paredit rainbow-delimiters flycheck-clojure flycheck-pos-tip))
 
 (eval-after-load 'clojure-mode
   '(progn
      (defun prelude-clojure-mode-defaults ()
+       (message "Applying clojure-mode defaults")
        (subword-mode +1)
-       (run-hooks 'prelude-lisp-coding-hook))
+       (auto-complete-mode +1)
+       (cider-mode +1)
+       (paredit-mode +1)
 
+       (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+       (add-hook 'clojure-mode-hook 'paredit-mode)
+
+       (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
+       (add-hook 'cider-mode-hook 'ac-cider-setup)
+       (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+;;     (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+       (add-to-list 'ac-modes 'cider-mode)
+;;     (add-to-list 'ac-modes 'cider-repl-mode)
+       (run-hooks 'prelude-lisp-coding-hook))
      (setq prelude-clojure-mode-hook 'prelude-clojure-mode-defaults)
 
      (add-hook 'clojure-mode-hook (lambda ()
@@ -48,18 +65,45 @@
 
 (eval-after-load 'cider
   '(progn
+     (message "cider after load")
      (setq nrepl-log-messages t)
-
+     (setq cider-show-error-buffer nil)
      (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 
      (defun prelude-cider-repl-mode-defaults ()
+       (message "Applying cider defaults...")
        (subword-mode +1)
+       (add-hook 'cider-repl-mode-hook 'ac-cider-setup)
+       (add-to-list 'ac-modes 'cider-repl-mode)
        (run-hooks 'prelude-interactive-lisp-coding-hook))
 
      (setq prelude-cider-repl-mode-hook 'prelude-cider-repl-mode-defaults)
 
      (add-hook 'cider-repl-mode-hook (lambda ()
                                        (run-hooks 'prelude-cider-repl-mode-hook)))))
+
+(eval-after-load 'auto-complete-config
+  '(progn
+     (message "auto complete after load")
+     (defun auto-complete-defaults ()
+        (message "Applying auto-complete defaults...")
+        (add-to-list 'ac-modes 'cider-mode)
+        (add-to-list 'ac-modes 'cider-repl-mode)
+        (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+        (ac-config-default)
+        (auto-complete-mode 1)
+     )
+
+     (setq prelude-auto-complete-mode-hook 'auto-complete-defaults)
+
+     (add-hook 'clojure-mode-hook (lambda ()
+                                    (run-hooks 'prelude-auto-complete-mode-hook)))))
+
+(eval-after-load 'flycheck '(flycheck-clojure-setup))
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+(eval-after-load 'flycheck
+  '(setq flycheck-display-errors-function #'flycheck-pos-tip-error-messages))
 
 (provide 'prelude-clojure)
 
