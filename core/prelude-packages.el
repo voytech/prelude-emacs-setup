@@ -71,6 +71,7 @@
     guru-mode
     ov
     projectile
+    ibuffer-projectile 
     magit
     move-text
     operate-on-number
@@ -81,7 +82,6 @@
     volatile-highlights
     zenburn-theme)
   "A list of packages to ensure are installed at launch.")
-
 (defun prelude-packages-installed-p ()
   "Check if all packages in `prelude-packages' are installed."
   (every #'package-installed-p prelude-packages))
